@@ -3,137 +3,659 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xstar Dashboard – Hindi Dubbed Movies</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>XSTAR AI - Smart Movie & Anime Recommendations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;}
-        .header{position:fixed;top:0;width:100%;background:#0a0a0a;padding:1rem 4%;display:flex;justify-content:space-between;align-items:center;z-index:1000;border-bottom:1px solid #222;}
-        .logo{font-size:1.5rem;font-weight:800;color:#e50914;}
-        .search-bar{display:flex;gap:10px;}
-        .search-bar input{padding:8px 15px;border-radius:30px;border:none;width:250px;}
-        .user-info{display:flex;align-items:center;gap:15px;}
-        .logout-btn{background:#e50914;padding:6px 15px;border-radius:30px;cursor:pointer;}
-        .main{margin-top:80px;padding:0 4%;}
-        .hero-banner{height:55vh;background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:2rem;margin-bottom:2rem;border-radius:12px;position:relative;}
-        .hero-banner::before{content:'';position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(to top,#0a0a0a,transparent);border-radius:12px;}
-        .hero-details{position:relative;z-index:2;max-width:600px;}
-        .hero-details h1{font-size:2.5rem;margin-bottom:0.5rem;}
-        .rating{color:#ffc107;margin:10px 0;}
-        .btn-group{display:flex;gap:15px;margin-top:15px;}
-        .btn-watch{background:#e50914;padding:10px 25px;border-radius:30px;border:none;color:#fff;cursor:pointer;}
-        .btn-download{background:#333;padding:10px 25px;border-radius:30px;border:none;color:#fff;cursor:pointer;}
-        .section{margin-bottom:3rem;}
-        .section h2{font-size:1.5rem;margin-bottom:1rem;border-left:4px solid #e50914;padding-left:15px;}
-        .movie-row{display:flex;gap:15px;overflow-x:auto;padding-bottom:10px;}
-        .movie-card{flex:0 0 160px;cursor:pointer;transition:transform 0.2s;}
-        .movie-card:hover{transform:scale(1.05);}
-        .movie-card img{width:100%;border-radius:8px;height:220px;object-fit:cover;}
-        .movie-card p{margin-top:8px;font-size:13px;font-weight:500;}
-        .movie-card .rating-small{font-size:11px;color:#ffc107;}
-        .anime-card{flex:0 0 160px;background:#1a1a1a;border-radius:10px;padding:15px;text-align:center;cursor:pointer;}
-        .anime-card i{font-size:3rem;color:#e50914;}
-        ::-webkit-scrollbar{height:6px;}
-        ::-webkit-scrollbar-track{background:#1a1a1a;}
-        ::-webkit-scrollbar-thumb{background:#e50914;border-radius:10px;}
-        @media(max-width:768px){.hero-banner{height:40vh;}.hero-details h1{font-size:1.5rem;}}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* Animated gradient background */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .animated-bg {
+            background: linear-gradient(-45deg, #0a0a0a, #1a1a2e, #16213e, #0a0a0a);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(229, 9, 20, 0.3);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #e50914, #ff6b6b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            cursor: pointer;
+        }
+        
+        /* Sidebar Filters */
+        .dashboard-container {
+            display: flex;
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .filters-sidebar {
+            width: 280px;
+            background: rgba(20, 20, 30, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            position: fixed;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .filters-sidebar h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            border-left: 3px solid #e50914;
+            padding-left: 10px;
+        }
+        
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #ccc;
+        }
+        
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 10px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        .genre-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .genre-tag {
+            padding: 6px 12px;
+            background: #1a1a1a;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .genre-tag:hover, .genre-tag.active {
+            background: #e50914;
+            transform: scale(1.05);
+        }
+        
+        .apply-filters-btn {
+            width: 100%;
+            padding: 12px;
+            background: #e50914;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .apply-filters-btn:hover {
+            background: #ff0a1a;
+            transform: scale(1.02);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 1.5rem 2rem;
+        }
+        
+        /* Hero Banner */
+        .hero-banner {
+            height: 55vh;
+            background-size: cover;
+            background-position: center;
+            border-radius: 16px;
+            position: relative;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .hero-banner:hover {
+            transform: scale(1.01);
+        }
+        
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(to top, #0a0a0a, transparent);
+        }
+        
+        .hero-details {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            right: 2rem;
+            z-index: 2;
+        }
+        
+        .hero-details h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .hero-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .hero-meta span {
+            background: rgba(0,0,0,0.6);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .hero-rating {
+            color: #ffc107;
+            margin-bottom: 0.5rem;
+        }
+        
+        .hero-story {
+            max-width: 600px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn-watch, .btn-download {
+            padding: 10px 24px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-watch {
+            background: #e50914;
+            color: white;
+        }
+        
+        .btn-download {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(5px);
+        }
+        
+        .btn-watch:hover, .btn-download:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Sections */
+        .section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header h2 {
+            font-size: 1.5rem;
+            border-left: 4px solid #e50914;
+            padding-left: 12px;
+        }
+        
+        .movie-row {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            scroll-behavior: smooth;
+        }
+        
+        .movie-row::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .movie-row::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 10px;
+        }
+        
+        .movie-row::-webkit-scrollbar-thumb {
+            background: #e50914;
+            border-radius: 10px;
+        }
+        
+        .movie-card {
+            flex: 0 0 160px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-10px) scale(1.05);
+        }
+        
+        .movie-card img {
+            width: 100%;
+            border-radius: 12px;
+            height: 220px;
+            object-fit: cover;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .movie-card p {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .movie-card .rating {
+            font-size: 0.75rem;
+            color: #ffc107;
+            text-align: center;
+        }
+        
+        /* Loading animation */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #333;
+            border-top-color: #e50914;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .filters-sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 999;
+            }
+            .filters-sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            .hero-details h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #e50914;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: #e50914;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="animated-bg">
     <div class="header">
-        <div class="logo">⭐ XSTAR | 100+ Hindi Dubbed</div>
-        <div class="search-bar"><input type="text" id="searchInput" placeholder="Search movies..."><button onclick="searchMovie()">🔍</button></div>
-        <div class="user-info"><span>👋 {{ user_name }}</span><div class="logout-btn" onclick="logout()">Logout</div></div>
+        <div class="logo">⭐ XSTAR AI</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-filter"></i> Filters
+            </div>
+            <div class="user-info">
+                <span><i class="fas fa-user-circle"></i> <span id="userName">{{ user_name }}</span></span>
+                <button onclick="logout()" style="background: #e50914; padding: 6px 15px; border-radius: 20px; border: none; color: white; cursor: pointer; margin-left: 10px;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="main">
-        <div id="heroSection" class="hero-banner"></div>
-        <div class="section"><h2>🎬 Trending Hindi Dubbed Movies</h2><div id="trendingRow" class="movie-row"></div></div>
-        <div class="section"><h2>🔥 Recommended For You</h2><div id="recRow" class="movie-row"></div></div>
-        <div class="section"><h2>🇯🇵 Anime - Watch on RareAnimes</h2><div id="animeRow" class="movie-row"></div></div>
-    </div>
-    <script>
-        const movies = {{ movies | tojson }};
-        const animeList = {{ anime_list | tojson }};
-        let currentHero = null;
-
-        function renderHero(movie){
-            document.getElementById('heroSection').innerHTML = `
+    
+    <div class="dashboard-container">
+        <!-- Left Sidebar Filters -->
+        <div class="filters-sidebar" id="filtersSidebar">
+            <h3><i class="fas fa-sliders-h"></i> Smart Filters</h3>
+            
+            <div class="filter-group">
+                <label><i class="fas fa-search"></i> Search</label>
+                <input type="text" id="searchInput" placeholder="Search movies..." onkeyup="applyFilters()">
+            </div>
+            
+            <div class="filter-group">
+                <label><i class="fas fa-film"></i> Genre</label>
+                <div class="genre-tags" id="genreTags"></div>
+            </div>
+            
+            <div class="filter-group">
+                <label><i class="fas fa-language"></i> Language</label>
+                <select id="languageFilter" onchange="applyFilters()">
+                    <option value="All">All Languages</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label><i class="fas fa-calendar"></i> Year Range</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" id="minYear" placeholder="Min Year" value="2000" onchange="applyFilters()">
+                    <input type="number" id="maxYear" placeholder="Max Year" value="2024" onchange="applyFilters()">
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <label><i class="fas fa-star"></i> Min Rating</label>
+                <input type="range" id="minRating" min="0" max="10" step="0.5" value="0" onchange="updateRatingValue()">
+                <span id="ratingValue">0+</span>
+            </div>
+            
+            <button class="apply-filters-btn" onclick="applyFilters()">
+                <i class="fas fa-magic"></i> Apply Filters
+            </button>
+            
+            <button class="apply-filters-btn" style="background: #333; margin-top: 10px;" onclick="resetFilters()">
+                <i class="fas fa-undo"></i> Reset
+            </button>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div id="heroContainer" class="hero-banner">
                 <div class="hero-details">
-                    <h1>${movie.title} (${movie.year})</h1>
-                    <div class="rating">⭐ ${movie.rating.imdb || 'N/A'}/10 IMDb</div>
-                    <p style="font-size:0.9rem;opacity:0.9;">${movie.genre} | ${movie.language}</p>
-                    <p style="margin:10px 0;line-height:1.5;">${movie.story.substring(0,200)}...</p>
-                    <div class="btn-group">
-                        <button class="btn-watch" onclick="watchMovie('${movie.id}')"><i class="fas fa-play"></i> Watch Now</button>
-                        <button class="btn-download" onclick="downloadMovie('${movie.id}')"><i class="fas fa-download"></i> Download</button>
+                    <div class="hero-meta"></div>
+                    <h1 id="heroTitle">Loading...</h1>
+                    <div class="hero-rating" id="heroRating"></div>
+                    <p class="hero-story" id="heroStory"></p>
+                    <div class="hero-buttons">
+                        <button class="btn-watch" onclick="watchCurrentMovie()"><i class="fas fa-play"></i> Watch Now</button>
+                        <button class="btn-download" onclick="downloadCurrentMovie()"><i class="fas fa-download"></i> Download</button>
                     </div>
                 </div>
-            `;
-            document.getElementById('heroSection').style.background = `linear-gradient(0deg, rgba(0,0,0,0.9), rgba(0,0,0,0.4)), url('${movie.banner || movie.image}')`;
-            document.getElementById('heroSection').style.backgroundSize = 'cover';
-            document.getElementById('heroSection').style.backgroundPosition = 'center';
+            </div>
+            
+            <div class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-fire" style="color: #e50914;"></i> Trending Now</h2>
+                    <button onclick="loadTrending()" style="background: none; border: none; color: #e50914; cursor: pointer;">Refresh ↻</button>
+                </div>
+                <div id="trendingRow" class="movie-row">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-robot" style="color: #e50914;"></i> AI Recommendations For You</h2>
+                </div>
+                <div id="recommendationsRow" class="movie-row">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-clock"></i> Recently Added</h2>
+                </div>
+                <div id="recentRow" class="movie-row">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let allMovies = [];
+        let currentHeroMovie = null;
+        let selectedGenre = "All";
+        
+        // Load genres and languages
+        async function loadFilters() {
+            const genresRes = await fetch('/api/genres');
+            const genres = await genresRes.json();
+            const genreContainer = document.getElementById('genreTags');
+            genreContainer.innerHTML = genres.map(g => `<span class="genre-tag" onclick="selectGenre('${g}')">${g}</span>`).join('');
+            
+            const langRes = await fetch('/api/languages');
+            const languages = await langRes.json();
+            const langSelect = document.getElementById('languageFilter');
+            langSelect.innerHTML = languages.map(l => `<option value="${l}">${l}</option>`).join('');
         }
-
-        function renderMovies(containerId, movieList){
+        
+        function selectGenre(genre) {
+            selectedGenre = genre;
+            document.querySelectorAll('.genre-tag').forEach(tag => {
+                if(tag.innerText === genre) tag.classList.add('active');
+                else tag.classList.remove('active');
+            });
+            applyFilters();
+        }
+        
+        async function loadMovies() {
+            const res = await fetch('/api/movies');
+            allMovies = await res.json();
+            if(allMovies.length) {
+                setHeroMovie(allMovies[0]);
+                loadTrending();
+                loadRecommendations();
+                loadRecent();
+            }
+        }
+        
+        async function loadTrending() {
+            const res = await fetch('/api/trending');
+            const trending = await res.json();
+            renderRow('trendingRow', trending);
+        }
+        
+        async function loadRecommendations() {
+            const res = await fetch('/api/recommendations');
+            const recs = await res.json();
+            renderRow('recommendationsRow', recs);
+        }
+        
+        function loadRecent() {
+            const recent = [...allMovies].slice(0, 12);
+            renderRow('recentRow', recent);
+        }
+        
+        function renderRow(containerId, movies) {
             const container = document.getElementById(containerId);
-            container.innerHTML = movieList.map(m => `
-                <div class="movie-card" onclick="showMovieDetails('${m.id}')">
-                    <img src="${m.image}" onerror="this.src='https://via.placeholder.com/160x220'">
+            if(!movies.length) {
+                container.innerHTML = '<p style="text-align:center; padding:2rem;">No movies found</p>';
+                return;
+            }
+            container.innerHTML = movies.map(m => `
+                <div class="movie-card" onclick="setHeroMovieById('${m.id}')">
+                    <img src="${m.image}" onerror="this.src='https://via.placeholder.com/160x220?text=No+Image'">
                     <p>${m.title}</p>
-                    <div class="rating-small">⭐ ${m.rating.imdb || 'N/A'}</div>
+                    <div class="rating">⭐ ${m.rating || 'N/A'}</div>
                 </div>
             `).join('');
         }
-
-        function renderAnime(){
-            const container = document.getElementById('animeRow');
-            container.innerHTML = animeList.map(a => `
-                <div class="anime-card" onclick="watchAnime('${a.title}')">
-                    <i class="fas fa-play-circle"></i>
-                    <p style="margin-top:10px;font-weight:600;">${a.title}</p>
-                    <small>${a.year}</small>
-                </div>
-            `).join('');
+        
+        function setHeroMovie(movie) {
+            currentHeroMovie = movie;
+            document.getElementById('heroTitle').innerText = `${movie.title} (${movie.year})`;
+            document.getElementById('heroRating').innerHTML = `⭐ ${movie.rating}/10 IMDb | 🎬 ${movie.genre} | 🌐 ${movie.language}`;
+            document.getElementById('heroStory').innerText = movie.story || "No description available.";
+            document.getElementById('heroContainer').style.backgroundImage = `linear-gradient(0deg, rgba(0,0,0,0.85), rgba(0,0,0,0.4)), url('${movie.banner || movie.image}')`;
+            document.getElementById('heroContainer').style.backgroundSize = 'cover';
+            document.getElementById('heroContainer').style.backgroundPosition = 'center';
         }
-
-        function showMovieDetails(id){
-            const movie = movies.find(m => m.id == id);
-            if(movie) renderHero(movie);
-            window.scrollTo({top:0,behavior:'smooth'});
+        
+        function setHeroMovieById(id) {
+            const movie = allMovies.find(m => m.id == id);
+            if(movie) setHeroMovie(movie);
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
-
-        async function watchMovie(id){
-            await fetch(`/api/watch/${id}`,{method:'POST'});
-            alert('Enjoy watching! Redirecting to download page...');
-            downloadMovie(id);
+        
+        async function applyFilters() {
+            const search = document.getElementById('searchInput').value;
+            const language = document.getElementById('languageFilter').value;
+            const minYear = document.getElementById('minYear').value;
+            const maxYear = document.getElementById('maxYear').value;
+            const minRating = document.getElementById('minRating').value;
+            const genre = selectedGenre === "All" ? "" : selectedGenre;
+            
+            let url = `/api/movies?`;
+            if(genre) url += `genre=${encodeURIComponent(genre)}&`;
+            if(language !== "All") url += `language=${encodeURIComponent(language)}&`;
+            if(minYear) url += `min_year=${minYear}&`;
+            if(maxYear) url += `max_year=${maxYear}&`;
+            if(minRating > 0) url += `min_rating=${minRating}&`;
+            if(search) url += `search=${encodeURIComponent(search)}`;
+            
+            const res = await fetch(url);
+            const filtered = await res.json();
+            renderRow('trendingRow', filtered);
+            if(filtered.length) setHeroMovie(filtered[0]);
+            showToast(`Found ${filtered.length} movies`);
         }
-
-        function downloadMovie(id){
-            window.open(`/download_movie/${id}`,'_blank');
+        
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('languageFilter').value = 'All';
+            document.getElementById('minYear').value = '2000';
+            document.getElementById('maxYear').value = '2024';
+            document.getElementById('minRating').value = '0';
+            document.getElementById('ratingValue').innerText = '0+';
+            selectedGenre = "All";
+            document.querySelectorAll('.genre-tag').forEach(tag => tag.classList.remove('active'));
+            loadMovies();
         }
-
-        function watchAnime(title){
-            window.open(`/watch_anime/${title}`,'_blank');
+        
+        function updateRatingValue() {
+            const val = document.getElementById('minRating').value;
+            document.getElementById('ratingValue').innerText = val + '+';
+            applyFilters();
         }
-
-        function searchMovie(){
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = movies.filter(m => m.title.toLowerCase().includes(query));
-            if(filtered.length) renderMovies('trendingRow', filtered.slice(0,10));
-            else alert('Movie not found');
+        
+        async function watchCurrentMovie() {
+            if(currentHeroMovie) {
+                await fetch(`/api/watch/${currentHeroMovie.id}`, {method: 'POST'});
+                window.open(`/download/${currentHeroMovie.id}`, '_blank');
+                showToast(`Now playing: ${currentHeroMovie.title}`);
+            }
         }
-
-        function logout(){ window.location.href = '/logout'; }
-
+        
+        function downloadCurrentMovie() {
+            if(currentHeroMovie) {
+                window.open(`/download/${currentHeroMovie.id}`, '_blank');
+            }
+        }
+        
+        async function logout() {
+            await fetch('/api/logout', {method: 'POST'});
+            window.location.href = '/';
+        }
+        
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        function toggleSidebar() {
+            document.getElementById('filtersSidebar').classList.toggle('open');
+        }
+        
         // Initialize
-        if(movies.length){
-            currentHero = movies[0];
-            renderHero(currentHero);
-            renderMovies('trendingRow', movies.slice(0,12));
-            renderMovies('recRow', movies.slice(12,24));
-            renderAnime();
-        }
+        loadFilters();
+        loadMovies();
     </script>
 </body>
 </html>
