@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xstar Dashboard – Hindi Dubbed Movies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;}
+        .header{position:fixed;top:0;width:100%;background:#0a0a0a;padding:1rem 4%;display:flex;justify-content:space-between;align-items:center;z-index:1000;border-bottom:1px solid #222;}
+        .logo{font-size:1.5rem;font-weight:800;color:#e50914;}
+        .search-bar{display:flex;gap:10px;}
+        .search-bar input{padding:8px 15px;border-radius:30px;border:none;width:250px;}
+        .user-info{display:flex;align-items:center;gap:15px;}
+        .logout-btn{background:#e50914;padding:6px 15px;border-radius:30px;cursor:pointer;}
+        .main{margin-top:80px;padding:0 4%;}
+        .hero-banner{height:55vh;background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:2rem;margin-bottom:2rem;border-radius:12px;position:relative;}
+        .hero-banner::before{content:'';position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(to top,#0a0a0a,transparent);border-radius:12px;}
+        .hero-details{position:relative;z-index:2;max-width:600px;}
+        .hero-details h1{font-size:2.5rem;margin-bottom:0.5rem;}
+        .rating{color:#ffc107;margin:10px 0;}
+        .btn-group{display:flex;gap:15px;margin-top:15px;}
+        .btn-watch{background:#e50914;padding:10px 25px;border-radius:30px;border:none;color:#fff;cursor:pointer;}
+        .btn-download{background:#333;padding:10px 25px;border-radius:30px;border:none;color:#fff;cursor:pointer;}
+        .section{margin-bottom:3rem;}
+        .section h2{font-size:1.5rem;margin-bottom:1rem;border-left:4px solid #e50914;padding-left:15px;}
+        .movie-row{display:flex;gap:15px;overflow-x:auto;padding-bottom:10px;}
+        .movie-card{flex:0 0 160px;cursor:pointer;transition:transform 0.2s;}
+        .movie-card:hover{transform:scale(1.05);}
+        .movie-card img{width:100%;border-radius:8px;height:220px;object-fit:cover;}
+        .movie-card p{margin-top:8px;font-size:13px;font-weight:500;}
+        .movie-card .rating-small{font-size:11px;color:#ffc107;}
+        .anime-card{flex:0 0 160px;background:#1a1a1a;border-radius:10px;padding:15px;text-align:center;cursor:pointer;}
+        .anime-card i{font-size:3rem;color:#e50914;}
+        ::-webkit-scrollbar{height:6px;}
+        ::-webkit-scrollbar-track{background:#1a1a1a;}
+        ::-webkit-scrollbar-thumb{background:#e50914;border-radius:10px;}
+        @media(max-width:768px){.hero-banner{height:40vh;}.hero-details h1{font-size:1.5rem;}}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">⭐ XSTAR | 100+ Hindi Dubbed</div>
+        <div class="search-bar"><input type="text" id="searchInput" placeholder="Search movies..."><button onclick="searchMovie()">🔍</button></div>
+        <div class="user-info"><span>👋 {{ user_name }}</span><div class="logout-btn" onclick="logout()">Logout</div></div>
+    </div>
+    <div class="main">
+        <div id="heroSection" class="hero-banner"></div>
+        <div class="section"><h2>🎬 Trending Hindi Dubbed Movies</h2><div id="trendingRow" class="movie-row"></div></div>
+        <div class="section"><h2>🔥 Recommended For You</h2><div id="recRow" class="movie-row"></div></div>
+        <div class="section"><h2>🇯🇵 Anime - Watch on RareAnimes</h2><div id="animeRow" class="movie-row"></div></div>
+    </div>
+    <script>
+        const movies = {{ movies | tojson }};
+        const animeList = {{ anime_list | tojson }};
+        let currentHero = null;
+
+        function renderHero(movie){
+            document.getElementById('heroSection').innerHTML = `
+                <div class="hero-details">
+                    <h1>${movie.title} (${movie.year})</h1>
+                    <div class="rating">⭐ ${movie.rating.imdb || 'N/A'}/10 IMDb</div>
+                    <p style="font-size:0.9rem;opacity:0.9;">${movie.genre} | ${movie.language}</p>
+                    <p style="margin:10px 0;line-height:1.5;">${movie.story.substring(0,200)}...</p>
+                    <div class="btn-group">
+                        <button class="btn-watch" onclick="watchMovie('${movie.id}')"><i class="fas fa-play"></i> Watch Now</button>
+                        <button class="btn-download" onclick="downloadMovie('${movie.id}')"><i class="fas fa-download"></i> Download</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('heroSection').style.background = `linear-gradient(0deg, rgba(0,0,0,0.9), rgba(0,0,0,0.4)), url('${movie.banner || movie.image}')`;
+            document.getElementById('heroSection').style.backgroundSize = 'cover';
+            document.getElementById('heroSection').style.backgroundPosition = 'center';
+        }
+
+        function renderMovies(containerId, movieList){
+            const container = document.getElementById(containerId);
+            container.innerHTML = movieList.map(m => `
+                <div class="movie-card" onclick="showMovieDetails('${m.id}')">
+                    <img src="${m.image}" onerror="this.src='https://via.placeholder.com/160x220'">
+                    <p>${m.title}</p>
+                    <div class="rating-small">⭐ ${m.rating.imdb || 'N/A'}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderAnime(){
+            const container = document.getElementById('animeRow');
+            container.innerHTML = animeList.map(a => `
+                <div class="anime-card" onclick="watchAnime('${a.title}')">
+                    <i class="fas fa-play-circle"></i>
+                    <p style="margin-top:10px;font-weight:600;">${a.title}</p>
+                    <small>${a.year}</small>
+                </div>
+            `).join('');
+        }
+
+        function showMovieDetails(id){
+            const movie = movies.find(m => m.id == id);
+            if(movie) renderHero(movie);
+            window.scrollTo({top:0,behavior:'smooth'});
+        }
+
+        async function watchMovie(id){
+            await fetch(`/api/watch/${id}`,{method:'POST'});
+            alert('Enjoy watching! Redirecting to download page...');
+            downloadMovie(id);
+        }
+
+        function downloadMovie(id){
+            window.open(`/download_movie/${id}`,'_blank');
+        }
+
+        function watchAnime(title){
+            window.open(`/watch_anime/${title}`,'_blank');
+        }
+
+        function searchMovie(){
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = movies.filter(m => m.title.toLowerCase().includes(query));
+            if(filtered.length) renderMovies('trendingRow', filtered.slice(0,10));
+            else alert('Movie not found');
+        }
+
+        function logout(){ window.location.href = '/logout'; }
+
+        // Initialize
+        if(movies.length){
+            currentHero = movies[0];
+            renderHero(currentHero);
+            renderMovies('trendingRow', movies.slice(0,12));
+            renderMovies('recRow', movies.slice(12,24));
+            renderAnime();
+        }
+    </script>
+</body>
+</html>
