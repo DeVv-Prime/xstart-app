@@ -3,73 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xstar – 100+ Hindi Dubbed Movies & Anime</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>XSTAR AI - Smart Entertainment Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;}
-        .header{position:fixed;top:0;width:100%;background:linear-gradient(180deg,rgba(0,0,0,0.95),rgba(0,0,0,0.7));padding:1rem 4%;display:flex;justify-content:space-between;align-items:center;z-index:1000;}
-        .logo{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,#e50914,#ff4d4d);-webkit-background-clip:text;background-clip:text;color:transparent;}
-        .hero{height:85vh;background:linear-gradient(0deg,rgba(0,0,0,0.85),rgba(0,0,0,0.4)),url('https://image.tmdb.org/t/p/original/wwemzKWzjKYJFfCeiB57q3r4Bcm.png');background-size:cover;display:flex;align-items:center;padding:0 8%;}
-        .hero h1{font-size:3.5rem;margin-bottom:1rem;}
-        .hero p{font-size:1.3rem;margin-bottom:1.8rem;}
-        .btn{background:#e50914;color:#fff;padding:12px 32px;border:none;border-radius:6px;font-size:1.1rem;font-weight:600;cursor:pointer;}
-        .features{padding:4rem 8%;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem;background:#111;}
-        .feature{text-align:center;padding:1.5rem;background:#1a1a1a;border-radius:12px;}
-        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:2000;justify-content:center;align-items:center;}
-        .modal-content{background:#1f1f1f;padding:2rem;border-radius:12px;width:90%;max-width:400px;}
-        .modal-content input{width:100%;padding:12px;margin:10px 0;background:#333;border:1px solid #444;border-radius:6px;color:#fff;}
-        .modal-content button{width:100%;padding:12px;background:#e50914;color:#fff;border:none;border-radius:6px;cursor:pointer;}
-        .stats{background:#e50914;display:inline-block;padding:5px 15px;border-radius:20px;font-size:0.9rem;margin-top:10px;}
-        @media(max-width:768px){.hero h1{font-size:2rem;}}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #e50914, #ff6b6b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(229,9,20,0.1) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+        
+        .hero-content {
+            z-index: 2;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, #e50914);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: #ccc;
+        }
+        
+        .btn {
+            background: #e50914;
+            color: white;
+            padding: 14px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(229,9,20,0.3);
+        }
+        
+        .features {
+            padding: 5rem 8%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            background: #0f0f0f;
+        }
+        
+        .feature {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        
+        .feature:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .feature i {
+            font-size: 3rem;
+            color: #e50914;
+            margin-bottom: 1rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #333;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .stats {
+            display: inline-block;
+            background: #e50914;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="logo">XSTAR</div>
-        <div><button class="btn" style="padding:8px 20px;" onclick="showLogin()">Sign In</button></div>
+        <div class="logo">⭐ XSTAR AI</div>
+        <div><button class="btn" style="padding: 8px 25px;" onclick="showLogin()">Sign In</button></div>
     </div>
+    
     <div class="hero">
         <div class="hero-content">
-            <h1>100+ Hindi Dubbed Movies</h1>
-            <p>Blockbuster Hollywood & Anime in Hindi. Watch anywhere, anytime.</p>
+            <h1>AI-Powered Entertainment</h1>
+            <p>500+ Movies | 10+ Languages | Smart Recommendations</p>
             <button class="btn" onclick="showSignup()">Get Started <i class="fas fa-arrow-right"></i></button>
-            <div class="stats">🎬 100+ Movies | 🔥 Trending Now</div>
+            <div class="stats"><i class="fas fa-robot"></i> AI Recommendations | <i class="fas fa-globe"></i> English/Hindi/Japanese/Spanish</div>
         </div>
     </div>
+    
     <div class="features">
-        <div class="feature"><i class="fas fa-tv" style="font-size:2rem;color:#e50914;"></i><h3>Enjoy on TV</h3><p>Watch on Smart TV, PS, Xbox, Chromecast</p></div>
-        <div class="feature"><i class="fas fa-download" style="font-size:2rem;color:#e50914;"></i><h3>Download & Watch Offline</h3><p>Save your favorites</p></div>
-        <div class="feature"><i class="fas fa-language" style="font-size:2rem;color:#e50914;"></i><h3>Hindi Dubbed</h3><p>Crystal clear Hindi voice-over</p></div>
-        <div class="feature"><i class="fas fa-robot" style="font-size:2rem;color:#e50914;"></i><h3>AI Recommendations</h3><p>Personalized suggestions</p></div>
+        <div class="feature"><i class="fas fa-brain"></i><h3>AI Recommendations</h3><p>Personalized based on your taste</p></div>
+        <div class="feature"><i class="fas fa-language"></i><h3>Multi-Language</h3><p>English, Hindi, Japanese, Spanish, Hinglish</p></div>
+        <div class="feature"><i class="fas fa-filter"></i><h3>Smart Filters</h3><p>Genre, Year, Rating, Language</p></div>
+        <div class="feature"><i class="fas fa-download"></i><h3>Direct Downloads</h3><p>VegaMovies & RareAnimes integration</p></div>
     </div>
+    
     <div id="authModal" class="modal">
         <div class="modal-content">
-            <span onclick="closeModal()" style="float:right;cursor:pointer;">&times;</span>
+            <span onclick="closeModal()" style="float:right; cursor:pointer; font-size:1.5rem;">&times;</span>
             <h2 id="modalTitle">Sign In</h2>
             <form id="authForm">
                 <input type="text" id="name" placeholder="Full Name" style="display:none">
                 <input type="email" id="email" placeholder="Email" required>
                 <input type="password" id="password" placeholder="Password" required>
-                <button type="submit">Continue</button>
+                <button type="submit" style="width:100%; background:#e50914; padding:12px; border:none; border-radius:8px; color:white; font-weight:600;">Continue</button>
             </form>
         </div>
     </div>
+    
     <script>
-        let isLogin=true;
-        function showLogin(){isLogin=true;document.getElementById('modalTitle').innerText='Sign In';document.getElementById('name').style.display='none';document.getElementById('authModal').style.display='flex';}
-        function showSignup(){isLogin=false;document.getElementById('modalTitle').innerText='Sign Up';document.getElementById('name').style.display='block';document.getElementById('authModal').style.display='flex';}
-        function closeModal(){document.getElementById('authModal').style.display='none';}
-        document.getElementById('authForm').addEventListener('submit',async(e)=>{
+        let isLogin = true;
+        
+        function showLogin() { isLogin = true; document.getElementById('modalTitle').innerText = 'Sign In'; document.getElementById('name').style.display = 'none'; document.getElementById('authModal').style.display = 'flex'; }
+        function showSignup() { isLogin = false; document.getElementById('modalTitle').innerText = 'Sign Up'; document.getElementById('name').style.display = 'block'; document.getElementById('authModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('authModal').style.display = 'none'; }
+        
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const formData=new FormData();
-            formData.append('email',document.getElementById('email').value);
-            formData.append('password',document.getElementById('password').value);
-            if(!isLogin) formData.append('name',document.getElementById('name').value);
-            const res=await fetch('/login',{method:'POST',body:formData});
-            if(res.ok) window.location.href='/dashboard';
-            else alert('Login failed');
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const name = document.getElementById('name').value;
+            
+            const endpoint = isLogin ? '/api/login' : '/api/register';
+            const body = isLogin ? { email, password } : { email, password, name };
+            
+            const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            const data = await res.json();
+            if (res.ok) {
+                window.location.href = '/dashboard';
+            } else {
+                alert(data.error || 'Authentication failed');
+            }
         });
     </script>
 </body>
